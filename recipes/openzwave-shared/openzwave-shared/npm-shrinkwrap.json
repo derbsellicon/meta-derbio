@@ -1,0 +1,9 @@
+{
+  "name": "openzwave-shared",
+  "version": "1.4.0",
+  "dependencies": {
+    "nan": {
+      "version": "2.6.2"
+    }
+  }
+}
