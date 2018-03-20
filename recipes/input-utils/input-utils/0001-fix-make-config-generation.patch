@@ -1,0 +1,25 @@
+From 5b0465a64b602425e5ecdf35a1551b0e59b7c163 Mon Sep 17 00:00:00 2001
+From: Genki Validator <validator@genki.com>
+Date: Tue, 20 Mar 2018 22:47:05 +0000
+Subject: [PATCH] fix make-config generation
+
+---
+ mk/Autoconf.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mk/Autoconf.mk b/mk/Autoconf.mk
+index 7608ea5..4685cfb 100644
+--- a/mk/Autoconf.mk
++++ b/mk/Autoconf.mk
+@@ -162,7 +162,7 @@ config: Make.config
+ 	@true
+ 
+ Make.config: $(srcdir)/GNUmakefile
+-	@echo -e "$(make-config-q)" > $@
++	@echo "$(make-config-q)" > $@
+ 	@echo
+ 	@echo "Make.config written, edit if needed"
+ 	@echo
+-- 
+2.7.4
+
