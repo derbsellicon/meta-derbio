@@ -1,2 +1,2 @@
 inherit setuptools
-require python-spidev.inc
+require ../layers/meta-openembedded/meta-python/recipes-devtools/python/python-spidev.inc
