@@ -12,6 +12,12 @@ SRC_URI += " \
 
 S = "${WORKDIR}"
 
+FILES_${PN} = " \
+  /opt/genki/bin/genki-wifi-ap3.sh \
+  /opt/genki/bin/tlc5947_libsoc3.py \
+  /opt/genki/bin/genki-val.sh \
+"
+
 do_install() {
   install -d ${D}/opt/genki/bin
   install -m 755 genki-val.sh ${D}/opt/genki/bin/ 
