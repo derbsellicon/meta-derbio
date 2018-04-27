@@ -1,0 +1,23 @@
+# interfaces(5) file used by ifup(8) and ifdown(8)
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+auto eth0
+iface eth0 inet manual
+   hwaddress ether 1a:31:9d:19:76:2d 
+
+
+#auto lo
+#iface lo inet loopback
+
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet static
+#  hostapd /etc/hostapd/hostapd.conf
+  address 10.0.1.1
+  network 10.0.1.1
+  netmask 255.255.255.0
+  gateway 10.0.1.1
+#
+#
+#
