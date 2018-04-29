@@ -186,7 +186,8 @@ gfx_val()
     _validate "GFX-WAYLAND" 
 
     su linaro -c "export XDG_RUNTIME_DIR=/run/user/1000 ; \
-    	google-chrome --kiosk 'https://www.youtube.com/embed/WjhQvv9kexk?&autoplay=1' 2>/dev/null 1>&2" &
+	google-chrome --disable-session-crashed-bubble --disable-infobars --kiosk \
+	'https://www.youtube.com/embed/WjhQvv9kexk?&autoplay=1' 2>/dev/null 1>&2" &
     _uservalidate "GFX-CHROME" "Does chrome opened youtube in kiosk mode and autoplayed the video ?"
      killall chrome
 }
