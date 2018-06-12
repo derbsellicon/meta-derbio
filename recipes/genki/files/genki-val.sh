@@ -143,9 +143,7 @@ zwave_val()
 
 zigbee_val()
 {
-
 #TODO
-read
 }
 
 
@@ -194,33 +192,43 @@ gfx_val()
 
 button_val()
 {
-EV_KEY KEY_VOLUMEDOWN pressed
-EV_KEY KEY_VOLUMEDOWN released
-    input-events 0 
+    echo "Please push the volume-down button :"
+    input-events -t 10 0 > /tmp/button-test
+    echo "test Done"
+    grep -q "EV_KEY KEY_VOLUMEDOWN pressed" /tmp/button-test && grep -q "EV_KEY KEY_VOLUMEDOWN released" /tmp/button-test
+    _validate "BUTTON-VOLDOWN"
 
-EV_KEY KEY_POWER pressed
-EV_KEY KEY_POWER released
-    input-events 0 
-
-EV_KEY KEY_VOLUMEUP pressed
-EV_KEY KEY_VOLUMEUP RELEASED
-    INPUT-EVENTS 1
+    echo "Please push the power/mute button :"
+    input-events -t 10 0 > /tmp/button-test
+    echo "test Done"
+    grep -q "EV_KEY KEY_POWER pressed" /tmp/button-test && grep -q "EV_KEY KEY_POWER released" /tmp/button-test
+    _validate "BUTTON-POWER"
+    
+    echo "Please push the volume-up button :"
+    input-events -t 10 1 > /tmp/button-test
+    echo "test Done"
+    grep -q "EV_KEY KEY_VOLUMEUP pressed" /tmp/button-test && grep -q "EV_KEY KEY_VOLUMEUP RELEASED" /tmp/button-test
+    _validate "BUTTON-VOLUP"
 }
 
-GFX_VAL
-READ
-WIFI_VAL
-READ
-AUDIO_VAL
-READ
-ZWAVE_VAL
-READ
-ZIGBEE_VAL
-read
-rgbled_val
-read
-gassensor_val
-read
-envsensor_val
-read
+echo "=========== Genki Validatin Test ==========="
 button_val
+sleep 2
+gfx_val
+sleep 2
+wifi_val
+sleep 2
+audio_val
+sleep 2
+zwave_val
+sleep 2
+zigbee_val
+sleep 2
+rgbled_val
+sleep 2
+gassensor_val
+sleep 2
+envsensor_val
+sleep 2
+echo "=========== Genki Validatin Test End ==========="
+cat $VALREPORT
