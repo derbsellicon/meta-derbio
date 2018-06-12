@@ -149,10 +149,10 @@ zigbee_val()
 
 rgbled_val()
 {
-    $SCRIPTS/tlc5947_libsoc2.py -c testchannels
+    $SCRIPTS/tlc5947_libsoc3.py -c testchannels
     _validate "RGBLED-2"
 
-    $SCRIPTS/tlc5947_libsoc2.py -c rgbchannel
+    $SCRIPTS/tlc5947_libsoc3.py -c rgbchannel
     _validate "RGBLED-1"
 
     _uservalidate "RGBLED" "Does the rgbleds changed to multi color ?"
@@ -213,6 +213,13 @@ button_val()
 
 prepare()
 {
+   echo "Prepation"
+   echo "src/gz all http://137.74.28.114:8080/ipk/all" > /etc/opkg.conf
+   echo "src/gz aarch64 http://137.74.28.114:8080/ipk/aarch64" >> /etc/opkg.conf
+   echo "src/gz dragonboard_410c http://137.74.28.114:8080/ipk/dragonboard_410c" >> /etc/opkg.conf
+   echo "dest root /" >> /etc/opkg.conf
+   echo "option lists_dir /var/lib/opkg/lists" >> /etc/opkg.conf
+
    opkg update
    opkg install i2c-tools
    opkg install input-utils
