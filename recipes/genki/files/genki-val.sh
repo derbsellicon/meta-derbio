@@ -90,7 +90,7 @@ _getALSAHW()
 
 recordaudio()
 {
-    arecord -c 1 -D plughw:0,2 -r 16000 -f S16_LE $RECORDFILE 
+    arecord -d 20 -c 1 -D plughw:0,2 -r 16000 -f S16_LE $RECORDFILE 
 }
 
 
