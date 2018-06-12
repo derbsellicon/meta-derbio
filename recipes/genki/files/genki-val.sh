@@ -211,7 +211,21 @@ button_val()
     _validate "BUTTON-VOLUP"
 }
 
+prepare()
+{
+   opkg update
+   opkg install i2c-tools
+   opkg install input-utils
+   opkg install alsa-utils
+   opkg install libsoc
+   opkg install node-libsoc
+   opkg install python-libsoc   
+   opkg install python-spidev
+}
+
 echo "=========== Genki Validatin Test ==========="
+prepare
+sleep 2
 button_val
 sleep 2
 gfx_val
