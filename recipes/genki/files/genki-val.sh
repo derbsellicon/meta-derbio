@@ -20,7 +20,7 @@
 
 RECORDFILE=/tmp/record.wav
 VALREPORT=/tmp/report.txt
-SCRIPTS=/home/root/scripts
+SCRIPTS=/opt/genki/bin/
 
 _uservalidate()
 {
@@ -108,6 +108,7 @@ playaudio() {
 
 wifi_val()
 {
+    echo "Validation of Wifi"
     SIGNALTHRES="60"
     signalvl=$(cat /proc/net/wireless | awk 'NR==3 {print $3 }' | tr -d '\.')
     test "$signalvl" -ge "$SIGNALTHRES"
@@ -116,6 +117,7 @@ wifi_val()
 
 audio_val()
 {
+    echo "Validation of Audio"
     playaudio "HDMI"
     _uservalidate "AUDIO-HDMI" "Do you hear something on HDMI ?"
 
@@ -131,6 +133,7 @@ audio_val()
 
 zwave_val()
 {
+    echo "Validation of ZWAVE"
     _keylock_associate
     _validate "ZWAVE-LOCKASSOC"
     _smartlock_unlock
@@ -144,11 +147,14 @@ zwave_val()
 zigbee_val()
 {
 #TODO
+  
+     echo "Validation of ZIGBEE"
 }
 
 
 rgbled_val()
 {
+    echo "Validation of RGBLED"
     $SCRIPTS/tlc5947_libsoc3.py -c testchannels
     _validate "RGBLED-2"
 
@@ -160,6 +166,7 @@ rgbled_val()
 
 gassensor_val()
 {
+    echo "Validation of Gas Sensor"
     resp=$(i2cdetect -y -r 0 0x5a 0x5a | awk 'NR==7 {print $2)')
     test "$resp" = "5a"
     _validate "I2C-GASSENSOR"
@@ -167,6 +174,7 @@ gassensor_val()
 
 envsensor_val()
 {
+    echo "Validation of Env Sensor"
     resp=$(i2cdetect -y -r 0 0x40 0x40 | awk 'NR==7 {print $2)')
     test "$resp" = "40"
     _validate "I2C-TMPHUMD"
@@ -174,6 +182,7 @@ envsensor_val()
 
 gfx_val()
 {
+    echo "Validation of Graphics"
     test "$(cat /sys/class/drm/card0-HDMI-A-1/status)" = "connected"
     _validate "GFX-HDMI" 
 
@@ -192,6 +201,7 @@ gfx_val()
 
 button_val()
 {
+    echo "Validation of Buttons"
     echo "Please push the volume-down button :"
     input-events -t 10 0 > /tmp/button-test
     echo "test Done"
@@ -213,7 +223,7 @@ button_val()
 
 prepare()
 {
-   echo "Prepation"
+   echo "Preparation of the board"
    echo "src/gz all http://137.74.28.114:8080/ipk/all" > /etc/opkg.conf
    echo "src/gz aarch64 http://137.74.28.114:8080/ipk/aarch64" >> /etc/opkg.conf
    echo "src/gz dragonboard_410c http://137.74.28.114:8080/ipk/dragonboard_410c" >> /etc/opkg.conf
@@ -235,15 +245,15 @@ prepare
 sleep 2
 button_val
 sleep 2
-gfx_val
+#gfx_val
 sleep 2
 wifi_val
 sleep 2
 audio_val
 sleep 2
-zwave_val
+#zwave_val
 sleep 2
-zigbee_val
+#zigbee_val
 sleep 2
 rgbled_val
 sleep 2
