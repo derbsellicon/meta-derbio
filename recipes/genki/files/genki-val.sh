@@ -53,20 +53,21 @@ _audioenable()
 {
     case $1 in 
 	"REC")
-	    amixer -c 0 cset iface=MIXER,name='DEC1 MUX' 'INP1'
-	    amixer -c 0 cset iface=MIXER,name='ADC2 Volume' 70
-	    amixer -c 0 cset iface=MIXER,name='DEC1 MUX' 'ADC1'
-	    amixer -c 0 cset iface=MIXER,name='ADC2 Volume' 70
-	    amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP1'
+	    amixer -c 0 cset iface=MIXER,name='DEC1 MUX' 'INP1' >/dev/null
+	    amixer -c 0 cset iface=MIXER,name='ADC2 Volume' 70 >/dev/null 
+	    amixer -c 0 cset iface=MIXER,name='DEC1 MUX' 'ADC1' >/dev/null 
+	    amixer -c 0 cset iface=MIXER,name='ADC2 Volume' 70 >/dev/null 
+	    amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP1' >/dev/null 
 	    ;;
 	"SPKR")
-	    amixer -c 0 cset iface=MIXER,name='RX1 MIX1 INP1' 'RX1'
-	    amixer -c 0 cset iface=MIXER,name='RX2 MIX1 INP1' 'RX2'
-	    amixer -c 0 cset iface=MIXER,name='RDAC2 MUX' 'RX2'
-	    amixer -c 0 cset iface=MIXER,name='HPHL' 1
-	    amixer -c 0 cset iface=MIXER,name='HPHR' 1
-	    amixer -c 0 cset iface=MIXER,name='RX1 Digital Volume' 100
-	    amixer -c 0 cset iface=MIXER,name='RX2 Digital Volume' 100
+	    amixer -c 0 cset iface=MIXER,name='RX1 MIX1 INP1' 'RX1' >/dev/null 
+	    amixer -c 0 cset iface=MIXER,name='RX2 MIX1 INP1' 'RX2' >/dev/null 
+	    amixer -c 0 cset iface=MIXER,name='RDAC2 MUX' 'RX2' >/dev/null 
+	    amixer -c 0 cset iface=MIXER,name='HPHL' 1 >/dev/null 
+	    amixer -c 0 cset iface=MIXER,name='HPHR' 1 >/dev/null 
+	    amixer -c 0 cset iface=MIXER,name='RX1 Digital Volume' 100 >/dev/null 
+	    amixer -c 0 cset iface=MIXER,name='RX2 Digital Volume' 100 >/dev/null 
+
 	    ;;
 	"HDMI")
 	    ;;
@@ -90,18 +91,17 @@ _getALSAHW()
 
 recordaudio()
 {
-    arecord -d 20 -c 1 -D plughw:0,2 -r 16000 -f S16_LE $RECORDFILE 
+    arecord -d 20 -c 1 -D plughw:0,2 -r 16000 -f S16_LE $RECORDFILE 2>/dev/null >/dev/null 
 }
-
 
 playaudio() {
     _audioenable $1
     hwdev=$(_getALSAHW $1)
 
-    [ -n "$2"] && {
-	aplay $2 
+    [ -n "$2" ] && {
+	aplay $2 2>/dev/null >/dev/null
     } || {
-	speaker-test -t sine -f 440 -c 2 -s 1 -D $hwdev
+	speaker-test -t sine -f 440 -c 2 -s 1 -D $hwdev 2>/dev/null >/dev/null
     }
 
 }
@@ -111,7 +111,7 @@ wifi_val()
     echo "Validation of Wifi"
     SIGNALTHRES="60"
     signalvl=$(cat /proc/net/wireless | awk 'NR==3 {print $3 }' | tr -d '\.')
-    test "$signalvl" -ge "$SIGNALTHRES"
+    test -n "$signalvl" && test "$signalvl" -ge "$SIGNALTHRES"
     _validate "WIFI"
 }
 
@@ -124,11 +124,12 @@ audio_val()
     playaudio "SPKR"
     _uservalidate "AUDIO-SPKR" "Do you hear something on SPEAKER?"
 
+    echo "Start record on microphone, please speak louder !"
     recordaudio
     _validate "AUDIO-REC"
 
-    playaudio "SPKR" RECORDFILE 
-    _uservalidate "AUDIO-SPKR" "Do you what you say on SPEAKER?"
+    playaudio "SPKR" $RECORDFILE 
+    _uservalidate "AUDIO-SPKR" "Do you hear what you say on SPEAKER ?"
 }
 
 zwave_val()
@@ -146,19 +147,18 @@ zwave_val()
 
 zigbee_val()
 {
-#TODO
-  
-     echo "Validation of ZIGBEE"
+    echo "Validation of ZIGBEE"
 }
 
 
 rgbled_val()
 {
     echo "Validation of RGBLED"
-    $SCRIPTS/tlc5947_libsoc3.py -c testchannels
+    cp /usr/lib64/libsoc.so.2 /usr/lib/libsoc.so
+    $SCRIPTS/tlc5947_libsoc3.py -c testchannels 1>/dev/null 2>/dev/null
     _validate "RGBLED-2"
 
-    $SCRIPTS/tlc5947_libsoc3.py -c rgbchannel
+    $SCRIPTS/tlc5947_libsoc3.py -c rgbchannel 1>/dev/null 2>/dev/null
     _validate "RGBLED-1"
 
     _uservalidate "RGBLED" "Does the rgbleds changed to multi color ?"
@@ -167,7 +167,7 @@ rgbled_val()
 gassensor_val()
 {
     echo "Validation of Gas Sensor"
-    resp=$(i2cdetect -y -r 0 0x5a 0x5a | awk 'NR==7 {print $2)')
+    resp=$(i2cdetect -y -r 0 0x5a 0x5a | awk 'NR==7 {print $2}')
     test "$resp" = "5a"
     _validate "I2C-GASSENSOR"
 }
@@ -175,7 +175,7 @@ gassensor_val()
 envsensor_val()
 {
     echo "Validation of Env Sensor"
-    resp=$(i2cdetect -y -r 0 0x40 0x40 | awk 'NR==7 {print $2)')
+    resp=$(i2cdetect -y -r 0 0x40 0x40 | awk 'NR==7 {print $2}')
     test "$resp" = "40"
     _validate "I2C-TMPHUMD"
 }
@@ -192,6 +192,7 @@ gfx_val()
     test -n "$WESTONPID"
     _validate "GFX-WAYLAND" 
 
+    return
     su linaro -c "export XDG_RUNTIME_DIR=/run/user/1000 ; \
 	google-chrome --disable-session-crashed-bubble --disable-infobars --kiosk \
 	'https://www.youtube.com/embed/WjhQvv9kexk?&autoplay=1' 2>/dev/null 1>&2" &
@@ -203,53 +204,46 @@ button_val()
 {
     echo "Validation of Buttons"
     echo "Please push the volume-down button :"
-    input-events -t 10 0 > /tmp/button-test
+    input-events -t 20 0 2>/tmp/button-test &
+    for i in $(seq 1 20) ; do
+    sleep 1
+    grep -q "EV_KEY KEY_VOLUMEDOWN pressed" /tmp/button-test && grep -q "EV_KEY KEY_VOLUMEDOWN released" /tmp/button-test && break
+    done 
+    [ "$i" = "20" ] && echo "timeout" || { 
     echo "test Done"
-    grep -q "EV_KEY KEY_VOLUMEDOWN pressed" /tmp/button-test && grep -q "EV_KEY KEY_VOLUMEDOWN released" /tmp/button-test
     _validate "BUTTON-VOLDOWN"
+    }
 
     echo "Please push the power/mute button :"
-    input-events -t 10 0 > /tmp/button-test
+    input-events -t 20 0 2>/tmp/button-test &
+    for i in $(seq 1 20) ; do
+    sleep 1
+    grep -q "EV_KEY KEY_POWER pressed" /tmp/button-test && grep -q "EV_KEY KEY_POWER released" /tmp/button-test && break
+    done 
+    [ "$i" = "20" ] && echo "timeout" || {
     echo "test Done"
-    grep -q "EV_KEY KEY_POWER pressed" /tmp/button-test && grep -q "EV_KEY KEY_POWER released" /tmp/button-test
     _validate "BUTTON-POWER"
+     }
     
     echo "Please push the volume-up button :"
-    input-events -t 10 1 > /tmp/button-test
+    input-events -t 20 1 2>/tmp/button-test &
+    for i in $(seq 1 20) ; do
+    sleep 1
+    grep -q "EV_KEY KEY_VOLUMEUP pressed" /tmp/button-test && grep -q "EV_KEY KEY_VOLUMEUP released" /tmp/button-test && break
+    done
+    [ "$i" = "20" ] && echo "timeout" || {
     echo "test Done"
-    grep -q "EV_KEY KEY_VOLUMEUP pressed" /tmp/button-test && grep -q "EV_KEY KEY_VOLUMEUP RELEASED" /tmp/button-test
     _validate "BUTTON-VOLUP"
-}
-
-prepare()
-{
-   echo "Preparation of the board"
-   echo "src/gz all http://137.74.28.114:8080/ipk/all" > /etc/opkg.conf
-   echo "src/gz aarch64 http://137.74.28.114:8080/ipk/aarch64" >> /etc/opkg.conf
-   echo "src/gz dragonboard_410c http://137.74.28.114:8080/ipk/dragonboard_410c" >> /etc/opkg.conf
-   echo "dest root /" >> /etc/opkg.conf
-   echo "option lists_dir /var/lib/opkg/lists" >> /etc/opkg.conf
-
-   opkg update
-   opkg install i2c-tools
-   opkg install input-utils
-   opkg install alsa-utils
-   opkg install libsoc
-   opkg install node-libsoc
-   opkg install python-libsoc   
-   opkg install python-spidev
+    }
 }
 
 echo "=========== Genki Validatin Test ==========="
-prepare
-sleep 2
+sleep 3
 button_val
 sleep 2
-#gfx_val
+gfx_val
 sleep 2
 wifi_val
-sleep 2
-audio_val
 sleep 2
 #zwave_val
 sleep 2
@@ -261,5 +255,6 @@ gassensor_val
 sleep 2
 envsensor_val
 sleep 2
+audio_val
 echo "=========== Genki Validatin Test End ==========="
 cat $VALREPORT
