@@ -13,6 +13,7 @@ SRC_URI += " \
     file://genki-kiosk.sh \
     file://genki-kiosk.service \
     file://genki.mhtml \
+    file://genki2.jpg \
 "
 
 S = "${WORKDIR}"
@@ -23,6 +24,7 @@ FILES_${PN} += " \
   /opt/genki/bin/genki-val.sh \
   /opt/genki/bin/genki-kiosk.sh \
   /opt/genki/data/genki.mhtml \
+  /opt/genki/data/genki2.jpg \
 "
 
 PROVIDES_${PN} += "${PN}-systemd"
@@ -41,4 +43,5 @@ do_install() {
   install -m 755 genki-kiosk.sh ${D}/opt/genki/bin/
   install -m 755 genki.mhtml ${D}/opt/genki/data/
   install -m 0644 genki-kiosk.service ${D}${systemd_unitdir}/system/genki-kiosk.service
+  install -m 0644 genki2.jpg ${D}/opt/genki/data/
 }
