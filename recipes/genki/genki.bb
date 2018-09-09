@@ -12,6 +12,7 @@ SRC_URI += " \
     file://rgbled-control.py \
     file://genki-kiosk.sh \
     file://genki-kiosk.service \
+    file://genki-firstrun.sh \
     file://genki-firstrun.service \
     file://genki.mhtml \
     file://genki2.jpg \
@@ -24,6 +25,7 @@ FILES_${PN} += " \
   /opt/genki/bin/rgbled-control.py \
   /opt/genki/bin/genki-val.sh \
   /opt/genki/bin/genki-kiosk.sh \
+  /opt/genki/bin/genki-firstrun.sh \
   /opt/genki/data/genki.mhtml \
   /opt/genki/data/genki2.jpg \
 "
@@ -44,6 +46,7 @@ do_install() {
   install -m 755 genki-wifi-ap.sh ${D}/opt/genki/bin/
   install -m 755 rgbled-control.py ${D}/opt/genki/bin/
   install -m 755 genki-kiosk.sh ${D}/opt/genki/bin/
+  install -m 755 genki-firstrun.sh ${D}/opt/genki/bin/
   install -m 755 genki.mhtml ${D}/opt/genki/data/
   install -m 0644 genki-kiosk.service ${D}${systemd_unitdir}/system/genki-kiosk.service
   install -m 0644 genki-firstrun.service ${D}${systemd_unitdir}/system/genki-firstrun.service
