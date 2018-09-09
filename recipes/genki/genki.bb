@@ -12,6 +12,7 @@ SRC_URI += " \
     file://rgbled-control.py \
     file://genki-kiosk.sh \
     file://genki-kiosk.service \
+    file://genki-firstrun.service \
     file://genki.mhtml \
     file://genki2.jpg \
 "
@@ -32,6 +33,7 @@ RREPLACES_${PN}  += "${PN}-systemd"
 RCONFLICTS_${PN} += "${PN}-systemd"
 
 SYSTEMD_SERVICE_${PN}  = "genki-kiosk.service"
+SYSTEMD_SERVICE_${PN} += "genki-firstrun.service"
 
 do_install() {
   install -d ${D}/opt/genki/bin
@@ -44,5 +46,6 @@ do_install() {
   install -m 755 genki-kiosk.sh ${D}/opt/genki/bin/
   install -m 755 genki.mhtml ${D}/opt/genki/data/
   install -m 0644 genki-kiosk.service ${D}${systemd_unitdir}/system/genki-kiosk.service
+  install -m 0644 genki-firstrun.service ${D}${systemd_unitdir}/system/genki-firstrun.service
   install -m 0644 genki2.jpg ${D}/opt/genki/data/
 }
