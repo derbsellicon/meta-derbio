@@ -1,9 +1,9 @@
 [Unit]
 Description=Genki First Run 
-After=weston@.service
+#After=weston@.service
 
 [Service]
-Type=simple
+Type=idle
 User=root
 WorkingDirectory=/
 ExecStart=/opt/genki/bin/genki-firstrun.sh
