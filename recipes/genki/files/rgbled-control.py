@@ -5,7 +5,7 @@ from libsoc import gpio
 import struct
 import time
 
-debug = 1
+debug = 0
 
 class tlc5947():
     def __init__(self,spiport=0,latchpin=108,blankpin=102):
