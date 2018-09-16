@@ -1,0 +1,39 @@
+From e4e593684e0b23c64c8a44336809b11b03c55176 Mon Sep 17 00:00:00 2001
+From: Zakaria ELQotbi <zakaria@gen.ki>
+Date: Wed, 12 Sep 2018 22:51:38 +0000
+Subject: [PATCH] fix path to caps on arm64
+
+---
+ ctl_equal.c | 2 +-
+ pcm_equal.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ctl_equal.c b/ctl_equal.c
+index dd90e88..8c71ef7 100644
+--- a/ctl_equal.c
++++ b/ctl_equal.c
+@@ -166,7 +166,7 @@ SND_CTL_PLUGIN_DEFINE_FUNC(equal)
+ 	snd_config_iterator_t it, next;
+ 	snd_ctl_equal_t *equal;
+ 	const char *controls = ".alsaequal.bin";
+-	const char *library = "/usr/lib/ladspa/caps.so";
++	const char *library = "/usr/lib64/ladspa/caps.so";
+ 	const char *module = "Eq10";
+ 	long channels = 2;
+ 	const char *sufix = " Playback Volume";
+diff --git a/pcm_equal.c b/pcm_equal.c
+index 8d98371..b66b1be 100644
+--- a/pcm_equal.c
++++ b/pcm_equal.c
+@@ -150,7 +150,7 @@ SND_PCM_PLUGIN_DEFINE_FUNC(equal)
+ 	snd_pcm_equal_t *equal;
+ 	snd_config_t *sconf = NULL;
+ 	const char *controls = ".alsaequal.bin";
+-	const char *library = "/usr/lib/ladspa/caps.so";
++	const char *library = "/usr/lib64/ladspa/caps.so";
+ 	const char *module = "Eq10";
+ 	long channels = 2;
+ 	int err;
+-- 
+2.7.4
+
